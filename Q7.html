@@ -1,0 +1,50 @@
+<!-- explaining promises with help of an example -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <h1>Movie Posters</h1>
+
+    <input
+      type="text"
+      placeholder="Enter the name of the movie to be searched"
+      id="movieName"
+    />
+    <input type="submit" value="Submit" onclick="fetchTheMovieName()" />
+
+    <img src="" alt="movies" id="superImage" />
+
+    <div id="main"></div>
+    <script>
+      function fetchTheMovieName() {
+        var movieName = document.getElementById("movieName").value;
+        //fetch is a special function which helps to return a promise
+        const fetchPromise1 = fetch(
+          `http://www.omdbapi.com/?apikey=b461cba4&t=${movieName}`
+        );
+        //fetchPromise1 has a promise.We can use the result by using the .then callback
+        fetchPromise1
+          .then((response) => {
+            //converting the api data that we received into json
+            return response.json();
+          })
+          //showing the content of the data on our webpage
+          //we can nest the .then statement as many times as possible
+          .then((response) => {
+            console.log(response);
+            var h1Element = document.createElement("h1");
+            h1Element.innerHTML = response.Title;
+            var imageContainer = document.getElementById("superImage");
+            var posterUrl = response.Poster;
+            imageContainer.setAttribute("src", posterUrl);
+            var mainContainer = document.getElementById("main");
+            mainContainer.innerHTML = response.Plot;
+            mainContainer.appendChild(h1Element);
+          });
+      }
+    </script>
+  </body>
+</html>
